@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>عرض الأجهزة</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/add-device">
+        <ion-icon name="add-outline"></ion-icon>
+        إضافة جهاز
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- حقل البحث -->
+  <ion-searchbar placeholder="ابحث عن جهاز...." [(ngModel)]="searchTerm" (ionInput)="filterDevices()" debounce="300"
+    dir="rtl"></ion-searchbar>
+
+  <!-- تبديل العرض المجمع/الفردي -->
+  <ion-item lines="none">
+    <ion-label>عرض مجمع</ion-label>
+    <ion-toggle [(ngModel)]="isGroupedView" (ionChange)="toggleView()"></ion-toggle>
+  </ion-item>
+
+  <!-- العرض المجمع -->
+  <ng-container *ngIf="isGroupedView">
+    <!-- تبديل الأجهزة الجديدة -->
+    <ion-item (click)="toggleDevices('new')" lines="none" style="cursor: pointer;">
+      <ion-label>الأجهزة الجديدة ({{ newDevices.length }})</ion-label>
+      <ion-icon [name]="isNewDevicesVisible ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+    </ion-item>
+
+    <!-- قائمة الأجهزة الجديدة المجمعة -->
+    <ion-list *ngIf="isNewDevicesVisible && newDevices.length > 0">
+      <ion-item *ngFor="let device of groupedNewDevices">
+        <ion-label>
+          <h2>{{ device.name }} ({{ device.count }})</h2>
+        </ion-label>
+        <ion-button slot="end" color="danger" (click)="decreaseDeviceCount(device)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <!-- تبديل الأجهزة القديمة -->
+    <ion-item (click)="toggleDevices('old')" lines="none" style="cursor: pointer;">
+      <ion-label>الأجهزة القديمة ({{ oldDevices.length }})</ion-label>
+      <ion-icon [name]="isOldDevicesVisible ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+    </ion-item>
+
+    <!-- قائمة الأجهزة القديمة المجمعة -->
+    <ion-list *ngIf="isOldDevicesVisible && groupedOldDevices.length > 0">
+      <ion-item *ngFor="let device of groupedOldDevices">
+        <ion-label>
+          <h2>{{ device.name }} ({{ device.count }})</h2>
+        </ion-label>
+
+        <ion-button slot="end" color="danger" (click)="decreaseDeviceCount(device)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+
+  <!-- العرض الفردي -->
+  <ng-container *ngIf="!isGroupedView">
+    <!-- تبديل الأجهزة الجديدة -->
+    <ion-item (click)="toggleDevices('new')" lines="none" style="cursor: pointer;">
+      <ion-label>الأجهزة الجديدة ({{ newDevices.length }})</ion-label>
+      <ion-icon [name]="isNewDevicesVisible ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+    </ion-item>
+
+    <!-- قائمة الأجهزة الجديدة الفردية -->
+    <ion-list *ngIf="isNewDevicesVisible && newDevices.length > 0">
+      <ion-item *ngFor="let device of newDevices">
+        <ion-label>
+          <h2>{{ device.name }}</h2>
+          <p>{{ device.createdAt | date: 'yyyy/MM/dd, hh:mm a' }}</p>
+        </ion-label>
+
+        <ion-button slot="end" color="danger" (click)="decreaseDeviceCount(device)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <!-- تبديل الأجهزة القديمة -->
+    <ion-item (click)="toggleDevices('old')" lines="none" style="cursor: pointer;">
+      <ion-label>الأجهزة القديمة ({{ oldDevices.length }})</ion-label>
+      <ion-icon [name]="isOldDevicesVisible ? 'chevron-up' : 'chevron-down'" slot="end"></ion-icon>
+    </ion-item>
+
+    <!-- قائمة الأجهزة القديمة الفردية -->
+    <ion-list *ngIf="isOldDevicesVisible && oldDevices.length > 0">
+      <ion-item *ngFor="let device of oldDevices">
+        <ion-label>
+          <h2>{{ device.name }}</h2>
+          <p>{{ device.createdAt | date: 'yyyy/MM/dd, hh:mm a' }}</p>
+        </ion-label>
+        <ion-button slot="end" color="danger" (click)="decreaseDeviceCount(device)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+</ion-content>

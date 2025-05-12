@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>إضافة جهاز</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/display-devices">
+        <ion-icon name="list-outline"></ion-icon>
+        عرض الأجهزة
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="deviceForm" (ngSubmit)="addDevice()">
+    <app-name-select [names]="deviceSuggestions" [label]="'اختر القسم'" [allowCreatingNames]="true" app-name-select
+      [selectedName]="deviceName" (nameChange)="selectItem($event)"
+      (nameCreated)="selectItem($event)"></app-name-select>
+
+    <!-- حقل عدد الأجهزة -->
+    <ion-item>
+      <ion-label position="floating">عدد الأجهزة</ion-label>
+      <ion-input type="number" formControlName="numberOfDevices" min="1" required></ion-input>
+    </ion-item>
+
+    <!-- اختيار جهاز جديد أو قديم -->
+    <ion-item>
+      <ion-radio-group formControlName="isNewDevice" style="display: flex; flex-direction: row;">
+        <ion-item lines="none" style="display: flex; align-items: center; margin-right: 16px;">
+          <ion-radio slot="start" value="true" id="radioYes"></ion-radio>
+          <ion-label style="width: 150px;" (click)="selectRadio('radioYes')">نعم</ion-label>
+        </ion-item>
+        <ion-item lines="none" style="display: flex; align-items: center;">
+          <ion-radio slot="start" value="false" id="radioNo"></ion-radio>
+          <ion-label style="width: 150px;" (click)="selectRadio('radioNo')">لا</ion-label>
+        </ion-item>
+      </ion-radio-group>
+      <ion-label>هل الجهاز جديد؟</ion-label>
+    </ion-item>
+
+    <!-- زر إضافة الجهاز -->
+    <ion-button expand="block" color="primary" type="submit" [disabled]="deviceForm.invalid || isloading">
+      إضافة جهاز
+    </ion-button>
+  </form>
+</ion-content>
